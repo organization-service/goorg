@@ -1,15 +1,19 @@
-package infra
+package database
 
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"io/ioutil"
 	"os"
 	"path"
 	"time"
 
+	"github.com/organization-service/goorg/internal"
+	apmmysql "go.elastic.co/apm/module/apmgormv2/driver/mysql"
+	apmpostgres "go.elastic.co/apm/module/apmgormv2/driver/postgres"
+	apmsqlite "go.elastic.co/apm/module/apmgormv2/driver/sqlite"
 	"gopkg.in/yaml.v2"
+	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -22,25 +26,10 @@ type (
 		slaveDB  *gorm.DB
 		logMode  bool
 	}
-	IDriver interface {
-		Master(c context.Context) *gorm.DB
-		MasterSql(c context.Context) *sql.DB
-		Slave(c context.Context) *gorm.DB
-		SlaveSql(c context.Context) *sql.DB
-		LogMode(set bool)
-	}
 	environment struct {
 		Dialect    string `yaml:"dialect"`
 		DataSource string `yaml:"datasource"`
 	}
-)
-
-var (
-	configs        map[string]*environment
-	errNotFoundKey         = errors.New("Not found key")
-	Master                 = "master"
-	Slave                  = "slave"
-	db             IDriver = nil
 )
 
 func getEnv(name, _default string) string {
@@ -81,6 +70,7 @@ func (db *DB) LogMode(set bool) {
 }
 
 func New() IDriver {
+	apmName := getEnv("APM_NAME", "")
 	if db != nil {
 		return db
 	}
@@ -101,9 +91,20 @@ func New() IDriver {
 	fnDialect := func(environment *environment) gorm.Dialector {
 		switch environment.Dialect {
 		case "postgres":
+			if apmName == internal.Elastic {
+				return apmpostgres.Open(environment.DataSource)
+			}
 			return postgres.Open(environment.DataSource)
 		case "sqlite3":
+			if apmName == internal.Elastic {
+				return apmsqlite.Open(environment.DataSource)
+			}
 			return sqlite.Open(environment.DataSource)
+		case "mysql":
+			if apmName == internal.Elastic {
+				return apmmysql.Open(environment.DataSource)
+			}
+			return mysql.Open(environment.DataSource)
 		}
 		return nil
 	}
@@ -126,7 +127,10 @@ func New() IDriver {
 	// ログ出力
 	masterDB.Logger.LogMode(logger.Info)
 	slaveDB.Logger.LogMode(logger.Info)
-
+	if apmName == internal.Elastic {
+		addGormCallbacks(masterDB)
+		addGormCallbacks(slaveDB)
+	}
 	// コネクションプーリング設定
 	setConnectionPool(masterDB)
 	setConnectionPool(slaveDB)

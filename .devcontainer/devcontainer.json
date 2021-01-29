@@ -4,7 +4,7 @@
 		"../docker-compose.yaml"
 	],
 	"service": "go-template",
-	"workspaceFolder": "/src/backend",
+	"workspaceFolder": "/src",
 	"settings": {
 		"terminal.integrated.shell.linux": null
 	},
