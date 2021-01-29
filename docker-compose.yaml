@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  go-template:
+    build: ./build-docker
+    tty: true
+    volumes:
+      - ./:/src/:delegated
+    networks:
+      - organization-service
+networks:
+  organization-service:
+    external: true

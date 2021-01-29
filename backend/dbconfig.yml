@@ -1,0 +1,22 @@
+development:
+  dialect: postgres
+  datasource: host=${DB_MASTER_HOSTNAME} dbname=${DB_NAME} user=${DB_USER} password=${DB_PASSWORD} sslmode=disable port=${DB_PORT} search_path=${DB_SCHEMA}
+  dir: migrations
+  table: go-template
+  schema: migrations
+production:
+  dialect: postgres
+  datasource: host=${DB_MASTER_HOSTNAME} dbname=${DB_NAME} user=${DB_USER} password=${DB_PASSWORD} sslmode=disable port=${DB_PORT} search_path=${DB_SCHEMA}
+  dir: migrations
+  table: go-template
+  schema: migrations
+master:
+  dialect: postgres
+  datasource: host=${DB_MASTER_HOSTNAME} dbname=${DB_NAME} user=${DB_USER} password=${DB_PASSWORD} sslmode=disable port=${DB_PORT} search_path=${DB_SCHEMA}
+slave:
+  dialect: postgres
+  datasource: host=${DB_SLAVE_HOSTNAME} dbname=${DB_NAME} user=${DB_USER} password=${DB_PASSWORD} sslmode=disable port=${DB_PORT} search_path=${DB_SCHEMA}
+mock:
+  dialect: sqlite3
+  datasource: ${DB_CONFIG_DIR}/test.db
+  dir: migrations
