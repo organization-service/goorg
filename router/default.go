@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"path"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/organization-service/goorg/logger"
@@ -85,10 +86,10 @@ func (r *defaultRouter) GlobalOPTIONS(h http.HandlerFunc) {
 	r.Router.GlobalOPTIONS = h
 }
 
-func (r *defaultRouter) Group(path string) IRouter {
+func (r *defaultRouter) Group(url string) IRouter {
 	return &defaultRouter{
 		Router: r.Router,
-		group:  path,
+		group:  path.Join(r.group, url),
 	}
 }
 

@@ -3,6 +3,7 @@ package router
 import (
 	"net/http"
 	"os"
+	"path"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/newrelic/go-agent/v3/integrations/nrhttprouter"
@@ -100,10 +101,10 @@ func (r *nrRouter) GlobalOPTIONS(h http.HandlerFunc) {
 	r.Router.GlobalOPTIONS = h
 }
 
-func (r *nrRouter) Group(path string) IRouter {
+func (r *nrRouter) Group(url string) IRouter {
 	return &nrRouter{
 		Router: r.Router,
-		group:  path,
+		group:  path.Join(r.group, url),
 	}
 }
 

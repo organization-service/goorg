@@ -1,12 +1,14 @@
 package router
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"path"
 	"runtime/debug"
 	"strings"
 
+	"github.com/julienschmidt/httprouter"
 	"github.com/organization-service/goorg/internal"
 )
 
@@ -21,6 +23,7 @@ func New(fn ...func() interface{}) IRouter {
 		router = newDefault()
 	}
 	router.GlobalOPTIONS(globalOPTIONS())
+	healthCheck(router)
 	return router
 }
 
@@ -43,4 +46,12 @@ func panicHandler(w http.ResponseWriter, r *http.Request, err interface{}) {
 
 func joinURL(router IRouter, url string) string {
 	return path.Join(router.getGroup(), url)
+}
+
+func healthCheck(router IRouter) {
+	router.GET("/health", func(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		rw.Header().Set("Content-Type", "application/json")
+		rw.WriteHeader(http.StatusOK)
+		rw.Write([]byte(fmt.Sprintf(`{"status": "%s"}`, http.StatusText(http.StatusOK))))
+	})
 }

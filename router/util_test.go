@@ -14,15 +14,20 @@ func setRouter(router router.IRouter, body string) {
 	router.DELETE("/", write(body))
 	router.PATCH("/", write(body))
 	router.PUT("/", write(body))
-	r := router.Group("/api")
 	{
-		r.GET("/test", write(body))
+		router := router.Group("/api")
+		{
+			router := router.Group("/test")
+			{
+				router.GET("", write(body))
+			}
+		}
 	}
 }
 
 func write(body string) func(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	return func(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		time.Sleep(5 * time.Second)
+		time.Sleep(0 * time.Second)
 		rw.Write([]byte(body))
 	}
 }

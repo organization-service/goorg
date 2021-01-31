@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"path"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/organization-service/goorg/logger"
@@ -90,10 +91,10 @@ func (r *elasticRouter) GlobalOPTIONS(h http.HandlerFunc) {
 	r.Router.GlobalOPTIONS = h
 }
 
-func (r *elasticRouter) Group(path string) IRouter {
+func (r *elasticRouter) Group(url string) IRouter {
 	return &elasticRouter{
 		Router: r.Router,
-		group:  path,
+		group:  path.Join(r.group, url),
 	}
 }
 

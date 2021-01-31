@@ -58,16 +58,20 @@ func WrapResponseWriter(w http.ResponseWriter) (http.ResponseWriter, *Response) 
 
 func Log(h httprouter.Handle) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		rAddr := r.RemoteAddr
+		rAddr := r.Header.Get("X-Real-IP")
+		if rAddr == "" {
+
+			rAddr = r.RemoteAddr
+		}
 		method := r.Method
 		path := r.URL.Path
-		log.Printf("Remote: %s [%s] %s", rAddr, method, path)
+		log.Printf("Remote:[%-20.20s]:[%-6.6s]:[%-50.50s]", rAddr, method, path)
 		w, resp := WrapResponseWriter(w)
 		if r.Method == http.MethodOptions {
 			return
 		}
 		h(w, r, p)
-		log.Println(fmt.Sprintf("Status: %v", resp.StatusCode))
+		log.Println(fmt.Sprintf("Remote:[%-20.20s]:[%-6.6s]:[%-50.50s]:Status:[%d]", rAddr, method, path, resp.StatusCode))
 	}
 }
 
