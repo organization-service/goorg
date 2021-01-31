@@ -21,10 +21,10 @@ import (
 )
 
 type (
-	DB struct {
-		masterDB *gorm.DB
-		slaveDB  *gorm.DB
-		logMode  bool
+	instanceDB struct {
+		connectionReadWrite *gorm.DB
+		connectionReadOnly  *gorm.DB
+		logMode             bool
 	}
 	environment struct {
 		Dialect    string `yaml:"dialect"`
@@ -39,33 +39,33 @@ func getEnv(name, _default string) string {
 	return _default
 }
 
-func (db *DB) Master(c context.Context) *gorm.DB {
-	_db := db.masterDB.WithContext(c)
+func (db *instanceDB) ReadWriteConnection(c context.Context) *gorm.DB {
+	_db := db.connectionReadWrite.WithContext(c)
 	if db.logMode {
 		_db = _db.Debug()
 	}
 	return _db
 }
 
-func (db *DB) MasterSql(c context.Context) *sql.DB {
-	sql, _ := db.Master(c).DB()
+func (db *instanceDB) ReadWriteConnectionObject(c context.Context) *sql.DB {
+	sql, _ := db.ReadWriteConnection(c).DB()
 	return sql
 }
 
-func (db *DB) Slave(c context.Context) *gorm.DB {
-	_db := db.slaveDB.WithContext(c)
+func (db *instanceDB) ReadOnlyConnection(c context.Context) *gorm.DB {
+	_db := db.connectionReadOnly.WithContext(c)
 	if db.logMode {
 		_db = _db.Debug()
 	}
 	return _db
 }
 
-func (db *DB) SlaveSql(c context.Context) *sql.DB {
-	sql, _ := db.Slave(c).DB()
+func (db *instanceDB) ReadOnlyConnectionObject(c context.Context) *sql.DB {
+	sql, _ := db.ReadOnlyConnection(c).DB()
 	return sql
 }
 
-func (db *DB) LogMode(set bool) {
+func (db *instanceDB) LogMode(set bool) {
 	db.logMode = set
 }
 
@@ -134,9 +134,9 @@ func New() IDriver {
 	// コネクションプーリング設定
 	setConnectionPool(masterDB)
 	setConnectionPool(slaveDB)
-	db = &DB{
-		masterDB: masterDB,
-		slaveDB:  slaveDB,
+	db = &instanceDB{
+		connectionReadWrite: masterDB,
+		connectionReadOnly:  slaveDB,
 	}
 	return db
 }

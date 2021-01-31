@@ -11,7 +11,7 @@ import (
 
 func New(fn ...func() interface{}) IRouter {
 	var router IRouter
-	switch strings.ToLower(internal.ApmName) {
+	switch strings.ToLower(internal.GetApmName()) {
 	case internal.Elastic:
 		router = newElastic(fn...)
 	case internal.Newrelic:

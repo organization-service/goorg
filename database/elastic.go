@@ -14,17 +14,17 @@ import (
 func dialect(environment *environment) gorm.Dialector {
 	switch environment.Dialect {
 	case "postgres":
-		if internal.ApmName == internal.Elastic {
+		if internal.GetApmName() == internal.Elastic {
 			return apmpostgres.Open(environment.DataSource)
 		}
 		return postgres.Open(environment.DataSource)
 	case "sqlite3":
-		if internal.ApmName == internal.Elastic {
+		if internal.GetApmName() == internal.Elastic {
 			return apmsqlite.Open(environment.DataSource)
 		}
 		return sqlite.Open(environment.DataSource)
 	case "mysql":
-		if internal.ApmName == internal.Elastic {
+		if internal.GetApmName() == internal.Elastic {
 			return apmmysql.Open(environment.DataSource)
 		}
 		return mysql.Open(environment.DataSource)

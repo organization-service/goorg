@@ -2,6 +2,7 @@ package router_test
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/organization-service/goorg/router"
@@ -17,6 +18,7 @@ func setRouter(router router.IRouter, body string) {
 
 func write(body string) func(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	return func(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		time.Sleep(5 * time.Second)
 		rw.Write([]byte(body))
 	}
 }

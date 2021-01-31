@@ -9,6 +9,7 @@ require (
 	github.com/stretchr/testify v1.5.1
 	go.elastic.co/apm/module/apmgormv2 v1.10.0
 	go.elastic.co/apm/module/apmhttprouter v1.10.0
+	go.uber.org/dig v1.10.0
 	gopkg.in/yaml.v2 v2.2.2
 	gorm.io/driver/mysql v1.0.2
 	gorm.io/driver/postgres v1.0.7

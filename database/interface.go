@@ -10,10 +10,10 @@ import (
 
 type (
 	IDriver interface {
-		Master(c context.Context) *gorm.DB
-		MasterSql(c context.Context) *sql.DB
-		Slave(c context.Context) *gorm.DB
-		SlaveSql(c context.Context) *sql.DB
+		ReadWriteConnection(c context.Context) *gorm.DB
+		ReadWriteConnectionObject(c context.Context) *sql.DB
+		ReadOnlyConnection(c context.Context) *gorm.DB
+		ReadOnlyConnectionObject(c context.Context) *sql.DB
 		LogMode(set bool)
 	}
 )
