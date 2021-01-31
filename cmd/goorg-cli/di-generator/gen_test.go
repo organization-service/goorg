@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	generator "github.com/organization-service/goorg/cmd/di-generator"
+	generator "github.com/organization-service/goorg/cmd/goorg-cli/di-generator"
 )
 
 func TestGen(t *testing.T) {

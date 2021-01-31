@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/organization-service/goorg"
-	generator "github.com/organization-service/goorg/cmd/di-generator"
+	generator "github.com/organization-service/goorg/cmd/goorg-cli/di-generator"
 	"github.com/urfave/cli/v2"
 )
 

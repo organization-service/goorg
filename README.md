@@ -1,5 +1,6 @@
-# E2W
+# CEAP(シープ)
 
-Connect enterprise with worker
+Connect enterprise with agentur and people
 
 企業とフリーランスや労働者を結ぶサービスのフレームワーク
+
