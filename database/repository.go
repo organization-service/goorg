@@ -22,24 +22,16 @@ type (
 	}
 )
 
-func NewRepository(driver IDriver) repository.Repository {
+func NewRepository(driver IDriver) *Repository {
 	return &Repository{
 		driver: driver,
 	}
 }
 
-func (r *Repository) NewConnection() (repository.Connection, error) {
+func (r *Repository) NewConnection() *Connection {
 	return &Connection{
 		driver: r.driver,
-	}, nil
-}
-
-func (r *Repository) MustConnection() repository.Connection {
-	db, err := r.NewConnection()
-	if err != nil {
-		panic(err)
 	}
-	return db
 }
 
 func (con *Connection) Transaction(c context.Context, f func(tx repository.Transaction) error) error {
