@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 
-	"github.com/organization-service/goorg/repository"
 	"gorm.io/gorm"
 )
 
@@ -34,7 +33,11 @@ func (r *Repository) NewConnection() *Connection {
 	}
 }
 
-func (con *Connection) Transaction(c context.Context, f func(tx repository.Transaction) error) error {
+func (con *Connection) GetDriver() IDriver {
+	return con.driver
+}
+
+func (con *Connection) Transaction(c context.Context, f func(tx interface{}) error) error {
 	var err error
 	defer func() {
 		if err != nil {
@@ -61,4 +64,8 @@ func (con *Connection) Transaction(c context.Context, f func(tx repository.Trans
 	}
 
 	return nil
+}
+
+func (tran *Transaction) ReadWriteObject() *gorm.DB {
+	return tran.connectionReadWrite
 }
