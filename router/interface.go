@@ -21,5 +21,7 @@ type (
 		ServeHTTP(w http.ResponseWriter, req *http.Request)
 		ServeFiles(path string, fileSystem http.FileSystem)
 		GlobalOPTIONS(h http.HandlerFunc)
+		Group(path string) IRouter
+		getGroup() string
 	}
 )

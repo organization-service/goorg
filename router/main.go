@@ -3,6 +3,7 @@ package router
 import (
 	"log"
 	"net/http"
+	"path"
 	"runtime/debug"
 	"strings"
 
@@ -38,4 +39,8 @@ func panicHandler(w http.ResponseWriter, r *http.Request, err interface{}) {
 	log.Println(r.URL.Path, string(debug.Stack()))
 	debug.PrintStack()
 	w.WriteHeader(http.StatusInternalServerError)
+}
+
+func joinURL(router IRouter, url string) string {
+	return path.Join(router.getGroup(), url)
 }

@@ -33,6 +33,18 @@ func TestDefault(t *testing.T) {
 			},
 		},
 		{
+			name: "get api/test",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodGet, "/api/test", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
 			name: "post",
 			fn: func(t *testing.T) {
 				req := httptest.NewRequest(http.MethodPost, "/", nil)
