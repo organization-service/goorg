@@ -6,6 +6,7 @@ require (
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/newrelic/go-agent/v3 v3.10.0
 	github.com/newrelic/go-agent/v3/integrations/nrhttprouter v1.0.0
+	github.com/rakyll/statik v0.1.7
 	github.com/stretchr/testify v1.5.1
 	github.com/urfave/cli v1.22.5
 	github.com/urfave/cli/v2 v2.3.0

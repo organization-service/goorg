@@ -5,7 +5,8 @@ import (
 	"os"
 
 	"github.com/organization-service/goorg"
-	generator "github.com/organization-service/goorg/cmd/goorg-cli/di-generator"
+	diGene "github.com/organization-service/goorg/cmd/goorg-cli/di-generator"
+	repoGene "github.com/organization-service/goorg/cmd/goorg-cli/repository-generator"
 	"github.com/urfave/cli/v2"
 )
 
@@ -23,7 +24,7 @@ func diCommand() *cli.Command {
 				Aliases: []string{"gene"},
 				Usage:   "Generate di register",
 				Action: func(c *cli.Context) error {
-					return generator.Action(c.String(inputDir), c.String(outputDir))
+					return diGene.Action(c.String(inputDir), c.String(outputDir))
 				},
 				Flags: []cli.Flag{
 					&cli.StringFlag{
@@ -44,6 +45,23 @@ func diCommand() *cli.Command {
 	}
 }
 
+func repositoryCommand() *cli.Command {
+	return &cli.Command{
+		Name:  "repo",
+		Usage: "base repository command",
+		Subcommands: []*cli.Command{
+			{
+				Name:    "generate",
+				Aliases: []string{"gene"},
+				Usage:   "Generate repository command",
+				Action: func(c *cli.Context) error {
+					return repoGene.Action()
+				},
+			},
+		},
+	}
+}
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "goorg-cli"
@@ -51,6 +69,7 @@ func main() {
 	app.Usage = "goorg framework command"
 	app.Commands = []*cli.Command{
 		diCommand(),
+		repositoryCommand(),
 	}
 	err := app.Run(os.Args)
 	if err != nil {

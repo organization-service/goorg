@@ -1,3 +1,3 @@
 package goorg
 
-const Version = "1.0.0-rc"
+const Version = "1.1.0-rc"
