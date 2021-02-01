@@ -70,7 +70,7 @@ func (db *instanceDB) LogMode(set bool) {
 }
 
 func New() IDriver {
-	apmName := getEnv("APM_NAME", "")
+	apmName := internal.GetApmName()
 	if db != nil {
 		return db
 	}

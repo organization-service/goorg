@@ -12,5 +12,8 @@
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
     },
-    "go.testEnvFile": "${workspaceFolder}/.env"
+    "go.testEnvFile": "${workspaceFolder}/.env",
+    "cSpell.ignoreWords": [
+        "goorg"
+    ]
 }

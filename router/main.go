@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"path"
 	"runtime/debug"
-	"strings"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/organization-service/goorg/internal"
@@ -14,7 +13,7 @@ import (
 
 func New(fn ...func() interface{}) IRouter {
 	var router IRouter
-	switch strings.ToLower(internal.GetApmName()) {
+	switch internal.GetApmName() {
 	case internal.Elastic:
 		router = newElastic(fn...)
 	case internal.Newrelic:
