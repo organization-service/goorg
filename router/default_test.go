@@ -97,3 +97,177 @@ func TestDefault(t *testing.T) {
 		t.Run(tt.name, tt.fn)
 	}
 }
+
+func TestDefaultHandlerFunc(t *testing.T) {
+	os.Setenv("APM_NAME", "")
+	body := "default"
+	router := router.New()
+	setRouterHandlerFunc(router, body)
+	tests := []struct {
+		name string
+		fn   func(t *testing.T)
+	}{
+		{
+			name: "get",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodGet, "/", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
+			name: "get api/test",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodGet, "/api/test", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
+			name: "post",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodPost, "/", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
+			name: "put",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodPut, "/", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
+			name: "patch",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodPatch, "/", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
+			name: "delete",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodDelete, "/", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, tt.fn)
+	}
+}
+
+func TestDefaultHandler(t *testing.T) {
+	os.Setenv("APM_NAME", "")
+	body := "default"
+	router := router.New()
+	setRouterHandler(router, body)
+	tests := []struct {
+		name string
+		fn   func(t *testing.T)
+	}{
+		{
+			name: "get",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodGet, "/", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
+			name: "get api/test",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodGet, "/api/test", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
+			name: "post",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodPost, "/", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
+			name: "put",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodPut, "/", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
+			name: "patch",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodPatch, "/", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
+			name: "delete",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodDelete, "/", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, tt.fn)
+	}
+}

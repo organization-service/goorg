@@ -24,42 +24,42 @@ func newDefault() IRouter {
 }
 
 // DELETE replaces httprouter.Router.DELETE.
-func (r *defaultRouter) DELETE(path string, h httprouter.Handle) {
+func (r *defaultRouter) DELETE(path string, h interface{}) {
 	r.Router.DELETE(joinURL(r, path), logger.Log(h))
 }
 
 // GET replaces httprouter.Router.GET.
-func (r *defaultRouter) GET(path string, h httprouter.Handle) {
+func (r *defaultRouter) GET(path string, h interface{}) {
 	r.Router.GET(joinURL(r, path), logger.Log(h))
 }
 
 // HEAD replaces httprouter.Router.HEAD.
-func (r *defaultRouter) HEAD(path string, h httprouter.Handle) {
+func (r *defaultRouter) HEAD(path string, h interface{}) {
 	r.Router.HEAD(joinURL(r, path), logger.Log(h))
 }
 
 // OPTIONS replaces httprouter.Router.OPTIONS.
-func (r *defaultRouter) OPTIONS(path string, h httprouter.Handle) {
+func (r *defaultRouter) OPTIONS(path string, h interface{}) {
 	r.Router.OPTIONS(joinURL(r, path), logger.Log(h))
 }
 
 // PATCH replaces httprouter.Router.PATCH.
-func (r *defaultRouter) PATCH(path string, h httprouter.Handle) {
+func (r *defaultRouter) PATCH(path string, h interface{}) {
 	r.Router.PATCH(joinURL(r, path), logger.Log(h))
 }
 
 // POST replaces httprouter.Router.POST.
-func (r *defaultRouter) POST(path string, h httprouter.Handle) {
+func (r *defaultRouter) POST(path string, h interface{}) {
 	r.Router.POST(joinURL(r, path), logger.Log(h))
 }
 
 // PUT replaces httprouter.Router.PUT.
-func (r *defaultRouter) PUT(path string, h httprouter.Handle) {
+func (r *defaultRouter) PUT(path string, h interface{}) {
 	r.Router.PUT(joinURL(r, path), logger.Log(h))
 }
 
 // Handle replaces httprouter.Router.Handle.
-func (r *defaultRouter) Handle(method, path string, h httprouter.Handle) {
+func (r *defaultRouter) Handle(method, path string, h interface{}) {
 	r.Router.Handle(method, joinURL(r, path), logger.Log(h))
 }
 

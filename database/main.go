@@ -32,13 +32,6 @@ type (
 	}
 )
 
-func getEnv(name, _default string) string {
-	if val := os.Getenv(name); val != "" {
-		return val
-	}
-	return _default
-}
-
 func (db *instanceDB) ReadWriteConnection(c context.Context) *gorm.DB {
 	_db := db.connectionReadWrite.WithContext(c)
 	if db.logMode {
@@ -145,7 +138,7 @@ func readConfigs() (map[string]*environment, error) {
 	if configs != nil {
 		return configs, nil
 	}
-	configDir := getEnv("DB_CONFIG_DIR", "")
+	configDir := os.Getenv("DB_CONFIG_DIR")
 	configFile := path.Join(configDir, "dbconfig.yml")
 	file, err := ioutil.ReadFile(configFile)
 	if err != nil {

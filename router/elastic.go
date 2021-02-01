@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"path"
 
-	"github.com/julienschmidt/httprouter"
 	"github.com/organization-service/goorg/logger"
 	"go.elastic.co/apm/module/apmhttprouter"
 )
@@ -29,42 +28,42 @@ func newElastic(fn ...func() interface{}) IRouter {
 }
 
 // DELETE replaces httprouter.Router.DELETE.
-func (r *elasticRouter) DELETE(path string, h httprouter.Handle) {
+func (r *elasticRouter) DELETE(path string, h interface{}) {
 	r.Router.DELETE(joinURL(r, path), logger.Log(h))
 }
 
 // GET replaces httprouter.Router.GET.
-func (r *elasticRouter) GET(path string, h httprouter.Handle) {
+func (r *elasticRouter) GET(path string, h interface{}) {
 	r.Router.GET(joinURL(r, path), logger.Log(h))
 }
 
 // HEAD replaces httprouter.Router.HEAD.
-func (r *elasticRouter) HEAD(path string, h httprouter.Handle) {
+func (r *elasticRouter) HEAD(path string, h interface{}) {
 	r.Router.HEAD(joinURL(r, path), logger.Log(h))
 }
 
 // OPTIONS replaces httprouter.Router.OPTIONS.
-func (r *elasticRouter) OPTIONS(path string, h httprouter.Handle) {
+func (r *elasticRouter) OPTIONS(path string, h interface{}) {
 	r.Router.OPTIONS(joinURL(r, path), logger.Log(h))
 }
 
 // PATCH replaces httprouter.Router.PATCH.
-func (r *elasticRouter) PATCH(path string, h httprouter.Handle) {
+func (r *elasticRouter) PATCH(path string, h interface{}) {
 	r.Router.PATCH(joinURL(r, path), logger.Log(h))
 }
 
 // POST replaces httprouter.Router.POST.
-func (r *elasticRouter) POST(path string, h httprouter.Handle) {
+func (r *elasticRouter) POST(path string, h interface{}) {
 	r.Router.POST(joinURL(r, path), logger.Log(h))
 }
 
 // PUT replaces httprouter.Router.PUT.
-func (r *elasticRouter) PUT(path string, h httprouter.Handle) {
+func (r *elasticRouter) PUT(path string, h interface{}) {
 	r.Router.PUT(joinURL(r, path), logger.Log(h))
 }
 
 // Handle replaces httprouter.Router.Handle.
-func (r *elasticRouter) Handle(method, path string, h httprouter.Handle) {
+func (r *elasticRouter) Handle(method, path string, h interface{}) {
 	r.Router.Handle(method, joinURL(r, path), logger.Log(h))
 }
 

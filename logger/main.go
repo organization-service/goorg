@@ -1,6 +1,8 @@
 package logger
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -56,11 +58,10 @@ func WrapResponseWriter(w http.ResponseWriter) (http.ResponseWriter, *Response) 
 	return &rw, &rw.resp
 }
 
-func Log(h httprouter.Handle) httprouter.Handle {
+func Log(h interface{}) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		rAddr := r.Header.Get("X-Real-IP")
 		if rAddr == "" {
-
 			rAddr = r.RemoteAddr
 		}
 		method := r.Method
@@ -70,7 +71,20 @@ func Log(h httprouter.Handle) httprouter.Handle {
 		if r.Method == http.MethodOptions {
 			return
 		}
-		h(w, r, p)
+		switch handler := h.(type) {
+		case func(http.ResponseWriter, *http.Request, httprouter.Params):
+			handler(w, r, p)
+		case httprouter.Handle:
+			handler(w, r, p)
+		case http.HandlerFunc:
+			*r = *r.WithContext(context.WithValue(r.Context(), httprouter.ParamsKey, p))
+			handler.ServeHTTP(w, r)
+		case func(http.ResponseWriter, *http.Request):
+			*r = *r.WithContext(context.WithValue(r.Context(), httprouter.ParamsKey, p))
+			handler(w, r)
+		default:
+			panic(errors.New("Not type handler"))
+		}
 		log.Println(fmt.Sprintf("Remote:[%-20.20s]:[%-6.6s]:[%-50.50s]:Status:[%d]", rAddr, method, path, resp.StatusCode))
 	}
 }

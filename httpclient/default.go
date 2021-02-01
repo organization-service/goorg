@@ -12,6 +12,7 @@ import (
 type (
 	defaultClient struct {
 		client *http.Client
+		req    *http.Request
 	}
 )
 
@@ -27,9 +28,20 @@ func newClient() *http.Client {
 	}
 }
 
-func newDefaultClient() IHttpClient {
+func getRequest(ctx context.Context, method, url string, body io.Reader, header http.Header) *http.Request {
+	req, _ := http.NewRequest(method, url, body)
+	req.Header = make(http.Header, len(header))
+	for k, s := range header {
+		req.Header[k] = append([]string(nil), s...)
+	}
+	*req = *req.WithContext(ctx)
+	return req
+}
+
+func newDefaultClient(ctx context.Context, method, url string, body io.Reader, header http.Header) IHttpClient {
 	return &defaultClient{
 		client: newClient(),
+		req:    getRequest(ctx, method, url, body, header),
 	}
 }
 
@@ -37,9 +49,10 @@ func (c *defaultClient) GetClient() *http.Client {
 	return c.client
 }
 
-func (c *defaultClient) Request(ctx context.Context, method, url string, body io.Reader, header http.Header) (*http.Response, error) {
-	req, _ := http.NewRequest(method, url, body)
-	req.Header = header
-	*req = *req.WithContext(ctx)
-	return c.client.Do(req)
+func (c *defaultClient) GetRequest() *http.Request {
+	return c.req
+}
+
+func (c *defaultClient) Do() (*http.Response, error) {
+	return c.client.Do(c.req)
 }

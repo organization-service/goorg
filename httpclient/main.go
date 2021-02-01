@@ -11,17 +11,18 @@ import (
 type (
 	IHttpClient interface {
 		GetClient() *http.Client
-		Request(ctx context.Context, method, url string, body io.Reader, header http.Header) (res *http.Response, err error)
+		GetRequest() *http.Request
+		Do() (res *http.Response, err error)
 	}
 )
 
-func NewClient() IHttpClient {
+func NewClient(ctx context.Context, method, url string, body io.Reader, header http.Header) IHttpClient {
 	switch internal.GetApmName() {
 	case internal.Elastic:
-		return newElasticClient()
+		return newElasticClient(ctx, method, url, body, header)
 	case internal.Newrelic:
-		return newNewrelicClient()
+		return newNewrelicClient(ctx, method, url, body, header)
 	default:
-		return newDefaultClient()
+		return newDefaultClient(ctx, method, url, body, header)
 	}
 }

@@ -5,7 +5,6 @@ import (
 	"os"
 	"path"
 
-	"github.com/julienschmidt/httprouter"
 	"github.com/newrelic/go-agent/v3/integrations/nrhttprouter"
 	"github.com/newrelic/go-agent/v3/newrelic"
 	"github.com/organization-service/goorg/logger"
@@ -39,42 +38,42 @@ func newrelicApplication() *newrelic.Application {
 }
 
 // DELETE replaces httprouter.Router.DELETE.
-func (r *nrRouter) DELETE(path string, h httprouter.Handle) {
+func (r *nrRouter) DELETE(path string, h interface{}) {
 	r.Router.DELETE(joinURL(r, path), logger.Log(h))
 }
 
 // GET replaces httprouter.Router.GET.
-func (r *nrRouter) GET(path string, h httprouter.Handle) {
+func (r *nrRouter) GET(path string, h interface{}) {
 	r.Router.GET(joinURL(r, path), logger.Log(h))
 }
 
 // HEAD replaces httprouter.Router.HEAD.
-func (r *nrRouter) HEAD(path string, h httprouter.Handle) {
+func (r *nrRouter) HEAD(path string, h interface{}) {
 	r.Router.HEAD(joinURL(r, path), logger.Log(h))
 }
 
 // OPTIONS replaces httprouter.Router.OPTIONS.
-func (r *nrRouter) OPTIONS(path string, h httprouter.Handle) {
+func (r *nrRouter) OPTIONS(path string, h interface{}) {
 	r.Router.OPTIONS(joinURL(r, path), logger.Log(h))
 }
 
 // PATCH replaces httprouter.Router.PATCH.
-func (r *nrRouter) PATCH(path string, h httprouter.Handle) {
+func (r *nrRouter) PATCH(path string, h interface{}) {
 	r.Router.PATCH(joinURL(r, path), logger.Log(h))
 }
 
 // POST replaces httprouter.Router.POST.
-func (r *nrRouter) POST(path string, h httprouter.Handle) {
+func (r *nrRouter) POST(path string, h interface{}) {
 	r.Router.POST(joinURL(r, path), logger.Log(h))
 }
 
 // PUT replaces httprouter.Router.PUT.
-func (r *nrRouter) PUT(path string, h httprouter.Handle) {
+func (r *nrRouter) PUT(path string, h interface{}) {
 	r.Router.PUT(joinURL(r, path), logger.Log(h))
 }
 
 // Handle replaces httprouter.Router.Handle.
-func (r *nrRouter) Handle(method, path string, h httprouter.Handle) {
+func (r *nrRouter) Handle(method, path string, h interface{}) {
 	r.Router.Handle(method, joinURL(r, path), logger.Log(h))
 }
 

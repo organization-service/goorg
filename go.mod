@@ -3,6 +3,8 @@ module github.com/organization-service/goorg
 go 1.15
 
 require (
+	github.com/auth0/go-jwt-middleware v1.0.0
+	github.com/form3tech-oss/jwt-go v3.2.2+incompatible
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/newrelic/go-agent v3.10.0+incompatible
 	github.com/newrelic/go-agent/v3 v3.10.0
