@@ -13,6 +13,7 @@ require (
 	github.com/stretchr/testify v1.5.1
 	github.com/urfave/cli v1.22.5
 	github.com/urfave/cli/v2 v2.3.0
+	go.elastic.co/apm v1.10.0
 	go.elastic.co/apm/module/apmgormv2 v1.10.0
 	go.elastic.co/apm/module/apmhttp v1.10.0
 	go.elastic.co/apm/module/apmhttprouter v1.10.0
