@@ -314,15 +314,18 @@ import (
 	"github.com/organization-service/goorg/database"
 )
 
-func New() *di.Container {
-	container := di.New()
-	container.Provide(database.New)
-	{{- range .Definitions}}
-	{{- if ne .FuncName ""}}
-	container.Provide({{.FuncName}})
-	{{- end}}
-	{{- end}}
+var container *di.Container
 
+func New() *di.Container {
+	if container == nil {
+		container := di.New()
+		container.Provide(database.New)
+		{{- range .Definitions}}
+		{{- if ne .FuncName ""}}
+		container.Provide({{.FuncName}})
+		{{- end}}
+		{{- end}}
+	}
 	return container
 }
 `
