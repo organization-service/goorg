@@ -318,7 +318,7 @@ var container *di.Container
 
 func New() *di.Container {
 	if container == nil {
-		container := di.New()
+		container = di.New()
 		container.Provide(database.New)
 		{{- range .Definitions}}
 		{{- if ne .FuncName ""}}
