@@ -53,6 +53,7 @@ func (con *dbConnection) Transaction(c context.Context, f func(tx repositories.T
 		}
 	}()
 	tx := con.driver.ReadWriteConnection(c)
+	tx = tx.Begin()
 	defer func() {
 		if err := recover(); err != nil {
 			tx.Rollback()

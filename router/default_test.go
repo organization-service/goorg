@@ -23,7 +23,7 @@ func TestDefault(t *testing.T) {
 		{
 			name: "get",
 			fn: func(t *testing.T) {
-				req := httptest.NewRequest(http.MethodGet, "/", nil)
+				req := httptest.NewRequest(http.MethodGet, "/?q=test", nil)
 				rw := httptest.NewRecorder()
 				router.ServeHTTP(rw, req)
 				assert.Equal(t, 200, rw.Result().StatusCode)
@@ -35,7 +35,7 @@ func TestDefault(t *testing.T) {
 		{
 			name: "get api/test",
 			fn: func(t *testing.T) {
-				req := httptest.NewRequest(http.MethodGet, "/api/test", nil)
+				req := httptest.NewRequest(http.MethodGet, "/api/test?q=test", nil)
 				rw := httptest.NewRecorder()
 				router.ServeHTTP(rw, req)
 				assert.Equal(t, 200, rw.Result().StatusCode)

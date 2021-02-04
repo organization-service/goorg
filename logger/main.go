@@ -4,8 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
+	"io"
+	"net"
 	"net/http"
+	"os"
+	"strings"
+	"time"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -19,6 +23,10 @@ type (
 		http.ResponseWriter
 		resp Response
 	}
+)
+
+var (
+	DefaultWriter io.Writer = os.Stdout
 )
 
 func (w *responseWriter) Write(buf []byte) (int, error) {
@@ -58,15 +66,44 @@ func WrapResponseWriter(w http.ResponseWriter) (http.ResponseWriter, *Response) 
 	return &rw, &rw.resp
 }
 
+func getClientIP(r *http.Request) string {
+	clientIP := r.Header.Get("X-Forwarded-For")
+	clientIP = strings.TrimSpace(strings.Split(clientIP, ",")[0])
+	if clientIP == "" {
+		clientIP = strings.TrimSpace(r.Header.Get("X-Real-IP"))
+	}
+	if clientIP != "" {
+		return clientIP
+	}
+
+	if ip, _, err := net.SplitHostPort(strings.TrimSpace(r.RemoteAddr)); err == nil {
+		return ip
+	}
+
+	return ""
+}
+
+func outPutLog(endTime time.Time, latency time.Duration, statusCode int, ipAddr, method, path string) {
+	// 時間 ステータスコード レイテンシー IPアドレス HTTPメソッド パス
+	fmt.Fprintf(
+		DefaultWriter,
+		"%v | %3d | %13v | %15s | %-7s | %s\n",
+		endTime.Format("2006/01/02 - 15:04:05"),
+		statusCode,
+		latency,
+		ipAddr,
+		method,
+		path,
+	)
+}
+
 func Log(h interface{}) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		rAddr := r.Header.Get("X-Real-IP")
-		if rAddr == "" {
-			rAddr = r.RemoteAddr
-		}
-		method := r.Method
+		start := time.Now()
 		path := r.URL.Path
-		log.Printf("Remote:[%-20.20s]:[%-6.6s]:[%-50.50s]", rAddr, method, path)
+		raw := r.URL.RawQuery
+		method := r.Method
+		rAddr := getClientIP(r)
 		w, resp := WrapResponseWriter(w)
 		if r.Method == http.MethodOptions {
 			return
@@ -85,36 +122,12 @@ func Log(h interface{}) httprouter.Handle {
 		default:
 			panic(errors.New("Not type handler"))
 		}
-		log.Println(fmt.Sprintf("Remote:[%-20.20s]:[%-6.6s]:[%-50.50s]:Status:[%d]", rAddr, method, path, resp.StatusCode))
-	}
-}
-
-func LogHandler(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		rAddr := r.RemoteAddr
-		method := r.Method
-		path := r.URL.Path
-		log.Printf("Remote: %s [%s] %s", rAddr, method, path)
-		w, resp := WrapResponseWriter(w)
-		if r.Method == http.MethodOptions {
-			return
+		end := time.Now()
+		latency := end.Sub(start)
+		statusCode := resp.StatusCode
+		if raw != "" {
+			path = path + "?" + raw
 		}
-		h.ServeHTTP(w, r)
-		log.Println(fmt.Sprintf("Status: %v", resp.StatusCode))
-	})
-}
-
-func LogHandlerFunc(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		rAddr := r.RemoteAddr
-		method := r.Method
-		path := r.URL.Path
-		log.Printf("Remote: %s [%s] %s", rAddr, method, path)
-		w, resp := WrapResponseWriter(w)
-		if r.Method == http.MethodOptions {
-			return
-		}
-		h.ServeHTTP(w, r)
-		log.Println(fmt.Sprintf("Status: %v", resp.StatusCode))
+		outPutLog(end, latency, statusCode, rAddr, method, path)
 	}
 }
