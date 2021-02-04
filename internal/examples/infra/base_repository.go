@@ -7,6 +7,7 @@ import (
 	"log"
 
 	"github.com/organization-service/goorg/database"
+	"github.com/organization-service/goorg/internal/examples/domain/repositories"
 	"gorm.io/gorm"
 )
 
