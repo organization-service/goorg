@@ -131,3 +131,47 @@ func Log(h interface{}) httprouter.Handle {
 		outPutLog(end, latency, statusCode, rAddr, method, path)
 	}
 }
+
+func LogHandler(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		path := r.URL.Path
+		raw := r.URL.RawQuery
+		method := r.Method
+		rAddr := getClientIP(r)
+		w, resp := WrapResponseWriter(w)
+		if r.Method == http.MethodOptions {
+			return
+		}
+		h.ServeHTTP(w, r)
+		end := time.Now()
+		latency := end.Sub(start)
+		statusCode := resp.StatusCode
+		if raw != "" {
+			path = path + "?" + raw
+		}
+		outPutLog(end, latency, statusCode, rAddr, method, path)
+	})
+}
+
+func LogHandlerFunc(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		path := r.URL.Path
+		raw := r.URL.RawQuery
+		method := r.Method
+		rAddr := getClientIP(r)
+		w, resp := WrapResponseWriter(w)
+		if r.Method == http.MethodOptions {
+			return
+		}
+		h.ServeHTTP(w, r)
+		end := time.Now()
+		latency := end.Sub(start)
+		statusCode := resp.StatusCode
+		if raw != "" {
+			path = path + "?" + raw
+		}
+		outPutLog(end, latency, statusCode, rAddr, method, path)
+	}
+}

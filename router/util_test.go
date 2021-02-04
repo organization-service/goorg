@@ -8,6 +8,10 @@ import (
 	"github.com/organization-service/goorg/router"
 )
 
+var (
+	sleepTime time.Duration = 0
+)
+
 func setRouter(router router.IRouter, body string) {
 	router.GET("/", write(body))
 	router.POST("/", write(body))
@@ -23,6 +27,8 @@ func setRouter(router router.IRouter, body string) {
 			}
 		}
 	}
+	router.HandlerFunc(http.MethodGet, "/handler-func", writeHandler(body))
+	router.Handler(http.MethodGet, "/handler", http.HandlerFunc(writeHandlerFunc(body)))
 }
 
 func setRouterHandlerFunc(router router.IRouter, body string) {
@@ -40,6 +46,8 @@ func setRouterHandlerFunc(router router.IRouter, body string) {
 			}
 		}
 	}
+	router.HandlerFunc(http.MethodGet, "/handler-func", writeHandler(body))
+	router.Handler(http.MethodGet, "/handler", http.HandlerFunc(writeHandlerFunc(body)))
 }
 
 func setRouterHandler(router router.IRouter, body string) {
@@ -57,25 +65,27 @@ func setRouterHandler(router router.IRouter, body string) {
 			}
 		}
 	}
+	router.HandlerFunc(http.MethodGet, "/handler-func", writeHandler(body))
+	router.Handler(http.MethodGet, "/handler", http.HandlerFunc(writeHandlerFunc(body)))
 }
 
 func writeHandler(body string) func(http.ResponseWriter, *http.Request) {
 	return func(rw http.ResponseWriter, r *http.Request) {
-		time.Sleep(2 * time.Second)
+		time.Sleep(sleepTime * time.Second)
 		rw.Write([]byte(body))
 	}
 }
 
 func writeHandlerFunc(body string) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
-		time.Sleep(0 * time.Second)
+		time.Sleep(sleepTime * time.Second)
 		rw.Write([]byte(body))
 	}
 }
 
 func write(body string) func(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	return func(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		time.Sleep(0 * time.Second)
+		time.Sleep(sleepTime * time.Second)
 		rw.Write([]byte(body))
 	}
 }

@@ -65,12 +65,20 @@ func (r *defaultRouter) Handle(method, path string, h interface{}) {
 
 // Handler replaces httprouter.Router.Handler.
 func (r *defaultRouter) Handler(method, path string, handler http.Handler) {
-	r.Router.Handler(method, joinURL(r, path), logger.LogHandler(handler))
+	h := logger.Log(handler)
+	r.Router.Handler(method, joinURL(r, path), http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+		p := httprouter.ParamsFromContext(r.Context())
+		h(rw, r, p)
+	}))
 }
 
 // HandlerFunc replaces httprouter.Router.HandlerFunc.
 func (r *defaultRouter) HandlerFunc(method, path string, handler http.HandlerFunc) {
-	r.Router.HandlerFunc(method, joinURL(r, path), logger.LogHandlerFunc(handler))
+	h := logger.Log(handler)
+	r.Router.HandlerFunc(method, joinURL(r, path), func(rw http.ResponseWriter, r *http.Request) {
+		p := httprouter.ParamsFromContext(r.Context())
+		h(rw, r, p)
+	})
 }
 
 // ServeHTTP replaces httprouter.Router.ServeHTTP.

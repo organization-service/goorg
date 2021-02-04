@@ -45,6 +45,30 @@ func TestDefault(t *testing.T) {
 			},
 		},
 		{
+			name: "get handler",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodGet, "/handler", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
+			name: "get handler-func",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodGet, "/handler-func", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
 			name: "post",
 			fn: func(t *testing.T) {
 				req := httptest.NewRequest(http.MethodPost, "/", nil)
@@ -110,7 +134,7 @@ func TestDefaultHandlerFunc(t *testing.T) {
 		{
 			name: "get",
 			fn: func(t *testing.T) {
-				req := httptest.NewRequest(http.MethodGet, "/", nil)
+				req := httptest.NewRequest(http.MethodGet, "/?q=test", nil)
 				rw := httptest.NewRecorder()
 				router.ServeHTTP(rw, req)
 				assert.Equal(t, 200, rw.Result().StatusCode)
@@ -122,7 +146,31 @@ func TestDefaultHandlerFunc(t *testing.T) {
 		{
 			name: "get api/test",
 			fn: func(t *testing.T) {
-				req := httptest.NewRequest(http.MethodGet, "/api/test", nil)
+				req := httptest.NewRequest(http.MethodGet, "/api/test?q=test", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
+			name: "get handler",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodGet, "/handler", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
+			name: "get handler-func",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodGet, "/handler-func", nil)
 				rw := httptest.NewRecorder()
 				router.ServeHTTP(rw, req)
 				assert.Equal(t, 200, rw.Result().StatusCode)
@@ -197,7 +245,7 @@ func TestDefaultHandler(t *testing.T) {
 		{
 			name: "get",
 			fn: func(t *testing.T) {
-				req := httptest.NewRequest(http.MethodGet, "/", nil)
+				req := httptest.NewRequest(http.MethodGet, "/?q=test", nil)
 				rw := httptest.NewRecorder()
 				router.ServeHTTP(rw, req)
 				assert.Equal(t, 200, rw.Result().StatusCode)
@@ -209,7 +257,31 @@ func TestDefaultHandler(t *testing.T) {
 		{
 			name: "get api/test",
 			fn: func(t *testing.T) {
-				req := httptest.NewRequest(http.MethodGet, "/api/test", nil)
+				req := httptest.NewRequest(http.MethodGet, "/api/test?q=test", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
+			name: "get handler",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodGet, "/handler", nil)
+				rw := httptest.NewRecorder()
+				router.ServeHTTP(rw, req)
+				assert.Equal(t, 200, rw.Result().StatusCode)
+				buf, _ := ioutil.ReadAll(rw.Result().Body)
+				defer rw.Result().Body.Close()
+				assert.Equal(t, []byte(body), buf)
+			},
+		},
+		{
+			name: "get handler-func",
+			fn: func(t *testing.T) {
+				req := httptest.NewRequest(http.MethodGet, "/handler-func", nil)
 				rw := httptest.NewRecorder()
 				router.ServeHTTP(rw, req)
 				assert.Equal(t, 200, rw.Result().StatusCode)
