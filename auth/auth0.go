@@ -9,6 +9,8 @@ import (
 	"github.com/form3tech-oss/jwt-go"
 )
 
+var getPemFn func(t *jwt.Token) (string, error)
+
 func auth0Validation(c context.Context, t *jwt.Token, fn ...ValidaterFunc) (interface{}, error) {
 	AUTH0_DOMAIN := os.Getenv("AUTH0_DOMAIN")
 	if AUTH0_DOMAIN == "" {

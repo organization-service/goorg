@@ -29,12 +29,11 @@ func newClient() *http.Client {
 }
 
 func getRequest(ctx context.Context, method, url string, body io.Reader, header http.Header) *http.Request {
-	req, _ := http.NewRequest(method, url, body)
+	req, _ := http.NewRequestWithContext(ctx, method, url, body)
 	req.Header = make(http.Header, len(header))
 	for k, s := range header {
 		req.Header[k] = append([]string(nil), s...)
 	}
-	*req = *req.WithContext(ctx)
 	return req
 }
 

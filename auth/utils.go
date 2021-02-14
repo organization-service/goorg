@@ -2,12 +2,14 @@ package auth
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"net/http"
 
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/organization-service/goorg/httpclient"
+	"golang.org/x/net/http2"
 )
 
 type (
@@ -25,6 +27,18 @@ type (
 		X5c []string `json:"x5c"`
 	}
 )
+
+func newClient() *http.Client {
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+	}
+	http2.ConfigureTransport(tr)
+	return &http.Client{
+		Transport: tr,
+	}
+}
 
 func getPem(ctx context.Context, t *jwt.Token, url string) (string, error) {
 	cert := ""
@@ -51,5 +65,5 @@ func getPem(ctx context.Context, t *jwt.Token, url string) (string, error) {
 }
 
 func FromContext(c context.Context) *jwt.Token {
-	return c.Value(AuthValid.Validation.Options.UserProperty).(*jwt.Token)
+	return c.Value(AuthValid.Options.UserProperty).(*jwt.Token)
 }

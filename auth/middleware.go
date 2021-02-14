@@ -12,33 +12,18 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-type (
-	AuthCheck struct {
-		Validation      *jwtmiddleware.JWTMiddleware
-		ValidationFuncs []ValidaterFunc
-		GetPem          GetPemFun
-	}
-)
-
-var AuthValid = &AuthCheck{
-	GetPem: getPem,
-}
+var AuthValid *jwtmiddleware.JWTMiddleware
 
 func AuthMiddleware(h interface{}) http.HandlerFunc {
 	IDP_NAME := os.Getenv("IDP_NAME")
-	if nil == AuthValid.ValidationFuncs {
-		AuthValid.ValidationFuncs = append(AuthValid.ValidationFuncs, func(c context.Context, token *jwt.Token) error {
-			return nil
-		})
-	}
 	return func(rw http.ResponseWriter, r *http.Request) {
-		c := r.Context()
-		if nil == AuthValid.Validation {
-			AuthValid.Validation = jwtmiddleware.New(jwtmiddleware.Options{
+		if nil == AuthValid {
+			AuthValid = jwtmiddleware.New(jwtmiddleware.Options{
 				ValidationKeyGetter: func(t *jwt.Token) (interface{}, error) {
 					switch IDP_NAME {
 					case "auth0":
-						return auth0Validation(c, t, AuthValid.ValidationFuncs...)
+						c := context.Background()
+						return auth0Validation(c, t)
 					default:
 						return nil, fmt.Errorf("No support IDP_NAME: %s", IDP_NAME)
 					}
@@ -46,7 +31,7 @@ func AuthMiddleware(h interface{}) http.HandlerFunc {
 				SigningMethod: jwt.SigningMethodRS256,
 			})
 		}
-		if err := AuthValid.Validation.CheckJWT(rw, r); err != nil {
+		if err := AuthValid.CheckJWT(rw, r); err != nil {
 			log.Println(err)
 		} else {
 			switch handler := h.(type) {
