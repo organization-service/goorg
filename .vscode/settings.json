@@ -15,5 +15,8 @@
     "go.testEnvFile": "${workspaceFolder}/.env",
     "cSpell.ignoreWords": [
         "goorg"
+    ],
+    "go.testFlags": [
+        "-v",
     ]
 }
