@@ -7,6 +7,7 @@ import (
 	"github.com/organization-service/goorg"
 	diGene "github.com/organization-service/goorg/cmd/goorg-cli/di-generator"
 	repoGene "github.com/organization-service/goorg/cmd/goorg-cli/repository-generator"
+	swaggerGene "github.com/organization-service/goorg/cmd/goorg-cli/swagger-generator"
 	"github.com/urfave/cli/v2"
 )
 
@@ -62,6 +63,23 @@ func repositoryCommand() *cli.Command {
 	}
 }
 
+func swaggerCommand() *cli.Command {
+	return &cli.Command{
+		Name:    "swagger",
+		Aliases: []string{"swag"},
+		Subcommands: []*cli.Command{
+			{
+				Name:    "create",
+				Aliases: []string{"new"},
+				Usage:   "Create swagger setting",
+				Action: func(c *cli.Context) error {
+					return swaggerGene.Action()
+				},
+			},
+		},
+	}
+}
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "goorg-cli"
@@ -70,6 +88,7 @@ func main() {
 	app.Commands = []*cli.Command{
 		diCommand(),
 		repositoryCommand(),
+		swaggerCommand(),
 	}
 	err := app.Run(os.Args)
 	if err != nil {

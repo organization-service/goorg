@@ -17,15 +17,16 @@ type (
 )
 
 func newClient() *http.Client {
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: true,
-		},
+	tlsConfig := &tls.Config{
+		InsecureSkipVerify: true,
 	}
-	http2.ConfigureTransport(tr)
-	return &http.Client{
-		Transport: tr,
+	client := http.DefaultClient
+	client.Transport = http.DefaultTransport
+	if v, ok := client.Transport.(*http.Transport); ok {
+		http2.ConfigureTransport(v)
+		v.TLSClientConfig = tlsConfig
 	}
+	return client
 }
 
 func getRequest(ctx context.Context, method, url string, body io.Reader, header http.Header) *http.Request {

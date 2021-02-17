@@ -1,7 +1,10 @@
 package auth_test
 
 import (
+	"fmt"
 	"net/http"
+	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/form3tech-oss/jwt-go"
@@ -18,36 +21,35 @@ func TestAuth0(t *testing.T) {
 		t := token.Claims.(jwt.MapClaims)
 		rw.Write([]byte(t["sub"].(string)))
 	}))
-	http.ListenAndServe(":8080", route)
-	// tests := []struct {
-	// 	name string
-	// 	fn   func(t *testing.T)
-	// }{
-	// 	{
-	// 		name: "get1",
-	// 		fn: func(t *testing.T) {
-	// 			header := http.Header{}
-	// 			header.Add("Authorization", fmt.Sprintf("Bearer %s", os.Getenv("ID_TOKEN")))
-	// 			req := httptest.NewRequest(http.MethodGet, "/id/123", nil)
-	// 			req.Header = header
-	// 			rw := httptest.NewRecorder()
-	// 			route.ServeHTTP(rw, req)
+	tests := []struct {
+		name string
+		fn   func(t *testing.T)
+	}{
+		{
+			name: "get1",
+			fn: func(t *testing.T) {
+				header := http.Header{}
+				header.Add("Authorization", fmt.Sprintf("Bearer %s", os.Getenv("ID_TOKEN")))
+				req := httptest.NewRequest(http.MethodGet, "/id/123", nil)
+				req.Header = header
+				rw := httptest.NewRecorder()
+				route.ServeHTTP(rw, req)
 
-	// 		},
-	// 	},
-	// 	{
-	// 		name: "get2",
-	// 		fn: func(t *testing.T) {
-	// 			header := http.Header{}
-	// 			header.Add("Authorization", fmt.Sprintf("Bearer %s", os.Getenv("ID_TOKEN")))
-	// 			req := httptest.NewRequest(http.MethodGet, "/id/123", nil)
-	// 			req.Header = header
-	// 			rw := httptest.NewRecorder()
-	// 			route.ServeHTTP(rw, req)
-	// 		},
-	// 	},
-	// }
-	// for _, tt := range tests {
-	// 	t.Run(tt.name, tt.fn)
-	// }
+			},
+		},
+		{
+			name: "get2",
+			fn: func(t *testing.T) {
+				header := http.Header{}
+				header.Add("Authorization", fmt.Sprintf("Bearer %s", os.Getenv("ID_TOKEN")))
+				req := httptest.NewRequest(http.MethodGet, "/id/123", nil)
+				req.Header = header
+				rw := httptest.NewRecorder()
+				route.ServeHTTP(rw, req)
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, tt.fn)
+	}
 }
