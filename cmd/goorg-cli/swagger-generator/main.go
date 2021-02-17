@@ -99,6 +99,13 @@ func build() error {
 	if err := fileCreate(buf, "application/server", "swagger.go"); err != nil {
 		return err
 	}
+	buf, err = tmpToBuffer("/swagger_handler.tpl", tmpModel)
+	if err != nil {
+		return err
+	}
+	if err := fileCreate(buf, "application/server/handler", "swagger_handler.go"); err != nil {
+		return err
+	}
 	return nil
 }
 
