@@ -29,19 +29,6 @@ func (w *responseWriter) WriteHeader(statusCode int) {
 	w.ResponseWriter.WriteHeader(statusCode)
 }
 
-func (w *responseWriter) CloseNotify() <-chan bool {
-	if closeNotifier, ok := w.ResponseWriter.(http.CloseNotifier); ok {
-		return closeNotifier.CloseNotify()
-	}
-	return nil
-}
-
-func (w *responseWriter) Flush() {
-	if flusher, ok := w.ResponseWriter.(http.Flusher); ok {
-		flusher.Flush()
-	}
-}
-
 func wrapResponseWriter(w http.ResponseWriter) http.ResponseWriter {
 	rw := responseWriter{
 		ResponseWriter: w,
