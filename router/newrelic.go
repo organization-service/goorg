@@ -33,6 +33,7 @@ func newrelicApplication() *newrelic.Application {
 	app, _ := newrelic.NewApplication(
 		newrelic.ConfigAppName(NEW_RELIC_APP_NAME),
 		newrelic.ConfigLicense(NEW_RELIC_LICENSE_KEY),
+		newrelic.ConfigDistributedTracerEnabled(true),
 	)
 	return app
 }
