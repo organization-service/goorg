@@ -6,8 +6,10 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/form3tech-oss/jwt-go"
+	"github.com/organization-service/goorg/cache"
 	"github.com/organization-service/goorg/httpclient"
 	"golang.org/x/net/http2"
 )
@@ -28,6 +30,8 @@ type (
 	}
 )
 
+var cachePem = cache.New()
+
 func newClient() *http.Client {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{
@@ -41,7 +45,16 @@ func newClient() *http.Client {
 }
 
 func getPem(ctx context.Context, t *jwt.Token, url string) (string, error) {
+	kid := t.Header["kid"].(string)
 	cert := ""
+	cacheCert := cachePem.Get(kid)
+	if cacheCert != nil {
+		if val, ok := cacheCert.(string); ok {
+			cert = "-----BEGIN CERTIFICATE-----\n" + val + "\n-----END CERTIFICATE-----"
+			return cert, nil
+		}
+	}
+
 	client := httpclient.NewClient(ctx, http.MethodGet, url, nil, http.Header{})
 	resp, err := client.Do()
 	if err != nil {
@@ -54,7 +67,10 @@ func getPem(ctx context.Context, t *jwt.Token, url string) (string, error) {
 		return cert, err
 	}
 	for _, val := range jwks.Keys {
-		if t.Header["kid"] == val.Kid {
+		if cachePem.Get(val.Kid) == nil {
+			cachePem.Put(val.Kid, val.X5c[0], time.Now().Add(5*time.Minute).UnixNano())
+		}
+		if t.Header["kid"].(string) == val.Kid {
 			cert = "-----BEGIN CERTIFICATE-----\n" + val.X5c[0] + "\n-----END CERTIFICATE-----"
 		}
 	}
