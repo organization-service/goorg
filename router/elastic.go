@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"path"
 
-	"github.com/organization-service/goorg/logger"
+	"github.com/julienschmidt/httprouter"
 	"go.elastic.co/apm/module/apmhttprouter"
 )
 
@@ -29,52 +29,52 @@ func newElastic(fn ...func() interface{}) IRouter {
 
 // DELETE replaces httprouter.Router.DELETE.
 func (r *elasticRouter) DELETE(path string, h interface{}) {
-	r.Router.DELETE(joinURL(r, path), logger.Log(h))
+	r.Router.DELETE(joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // GET replaces httprouter.Router.GET.
 func (r *elasticRouter) GET(path string, h interface{}) {
-	r.Router.GET(joinURL(r, path), logger.Log(h))
+	r.Router.GET(joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // HEAD replaces httprouter.Router.HEAD.
 func (r *elasticRouter) HEAD(path string, h interface{}) {
-	r.Router.HEAD(joinURL(r, path), logger.Log(h))
+	r.Router.HEAD(joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // OPTIONS replaces httprouter.Router.OPTIONS.
 func (r *elasticRouter) OPTIONS(path string, h interface{}) {
-	r.Router.OPTIONS(joinURL(r, path), logger.Log(h))
+	r.Router.OPTIONS(joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // PATCH replaces httprouter.Router.PATCH.
 func (r *elasticRouter) PATCH(path string, h interface{}) {
-	r.Router.PATCH(joinURL(r, path), logger.Log(h))
+	r.Router.PATCH(joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // POST replaces httprouter.Router.POST.
 func (r *elasticRouter) POST(path string, h interface{}) {
-	r.Router.POST(joinURL(r, path), logger.Log(h))
+	r.Router.POST(joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // PUT replaces httprouter.Router.PUT.
 func (r *elasticRouter) PUT(path string, h interface{}) {
-	r.Router.PUT(joinURL(r, path), logger.Log(h))
+	r.Router.PUT(joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // Handle replaces httprouter.Router.Handle.
 func (r *elasticRouter) Handle(method, path string, h interface{}) {
-	r.Router.Handle(method, joinURL(r, path), logger.Log(h))
+	r.Router.Handle(method, joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // Handler replaces httprouter.Router.Handler.
-func (r *elasticRouter) Handler(method, path string, handler http.Handler) {
-	r.Router.Handler(method, joinURL(r, path), logger.LogHandler(handler))
+func (r *elasticRouter) Handler(method, path string, h http.Handler) {
+	r.Router.Handler(method, joinURL(r, path), logHandler(h, handler).(http.Handler))
 }
 
 // HandlerFunc replaces httprouter.Router.HandlerFunc.
-func (r *elasticRouter) HandlerFunc(method, path string, handler http.HandlerFunc) {
-	r.Router.HandlerFunc(method, joinURL(r, path), logger.LogHandlerFunc(handler))
+func (r *elasticRouter) HandlerFunc(method, path string, h http.HandlerFunc) {
+	r.Router.HandlerFunc(method, joinURL(r, path), logHandler(h, handlerFunc).(http.HandlerFunc))
 }
 
 // ServeHTTP replaces httprouter.Router.ServeHTTP.

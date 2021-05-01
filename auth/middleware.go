@@ -9,7 +9,7 @@ import (
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/form3tech-oss/jwt-go"
-	"github.com/julienschmidt/httprouter"
+	"github.com/organization-service/goorg/internal"
 )
 
 var AuthValid *jwtmiddleware.JWTMiddleware
@@ -29,23 +29,13 @@ func AuthMiddleware(h interface{}) http.HandlerFunc {
 					}
 				},
 				SigningMethod: jwt.SigningMethodRS256,
+				ErrorHandler:  internal.OnError,
 			})
 		}
 		if err := AuthValid.CheckJWT(rw, r); err != nil {
 			log.Println(err)
 		} else {
-			switch handler := h.(type) {
-			case func(http.ResponseWriter, *http.Request, httprouter.Params):
-				p := httprouter.ParamsFromContext(r.Context())
-				handler(rw, r, p)
-			case httprouter.Handle:
-				p := httprouter.ParamsFromContext(r.Context())
-				handler(rw, r, p)
-			case http.HandlerFunc:
-				handler.ServeHTTP(rw, r)
-			case func(http.ResponseWriter, *http.Request):
-				handler(rw, r)
-			}
+			internal.CallHandler(h, rw, r)
 		}
 	}
 }

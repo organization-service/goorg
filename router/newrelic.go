@@ -5,9 +5,9 @@ import (
 	"os"
 	"path"
 
+	"github.com/julienschmidt/httprouter"
 	"github.com/newrelic/go-agent/v3/integrations/nrhttprouter"
 	"github.com/newrelic/go-agent/v3/newrelic"
-	"github.com/organization-service/goorg/logger"
 )
 
 type (
@@ -40,52 +40,52 @@ func newrelicApplication() *newrelic.Application {
 
 // DELETE replaces httprouter.Router.DELETE.
 func (r *nrRouter) DELETE(path string, h interface{}) {
-	r.Router.DELETE(joinURL(r, path), logger.Log(h))
+	r.Router.DELETE(joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // GET replaces httprouter.Router.GET.
 func (r *nrRouter) GET(path string, h interface{}) {
-	r.Router.GET(joinURL(r, path), logger.Log(h))
+	r.Router.GET(joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // HEAD replaces httprouter.Router.HEAD.
 func (r *nrRouter) HEAD(path string, h interface{}) {
-	r.Router.HEAD(joinURL(r, path), logger.Log(h))
+	r.Router.HEAD(joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // OPTIONS replaces httprouter.Router.OPTIONS.
 func (r *nrRouter) OPTIONS(path string, h interface{}) {
-	r.Router.OPTIONS(joinURL(r, path), logger.Log(h))
+	r.Router.OPTIONS(joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // PATCH replaces httprouter.Router.PATCH.
 func (r *nrRouter) PATCH(path string, h interface{}) {
-	r.Router.PATCH(joinURL(r, path), logger.Log(h))
+	r.Router.PATCH(joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // POST replaces httprouter.Router.POST.
 func (r *nrRouter) POST(path string, h interface{}) {
-	r.Router.POST(joinURL(r, path), logger.Log(h))
+	r.Router.POST(joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // PUT replaces httprouter.Router.PUT.
 func (r *nrRouter) PUT(path string, h interface{}) {
-	r.Router.PUT(joinURL(r, path), logger.Log(h))
+	r.Router.PUT(joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // Handle replaces httprouter.Router.Handle.
 func (r *nrRouter) Handle(method, path string, h interface{}) {
-	r.Router.Handle(method, joinURL(r, path), logger.Log(h))
+	r.Router.Handle(method, joinURL(r, path), logHandler(h).(func(w http.ResponseWriter, r *http.Request, p httprouter.Params)))
 }
 
 // Handler replaces httprouter.Router.Handler.
-func (r *nrRouter) Handler(method, path string, handler http.Handler) {
-	r.Router.Handler(method, joinURL(r, path), logger.LogHandler(handler))
+func (r *nrRouter) Handler(method, path string, h http.Handler) {
+	r.Router.Handler(method, joinURL(r, path), logHandler(h, handler).(http.Handler))
 }
 
 // HandlerFunc replaces httprouter.Router.HandlerFunc.
-func (r *nrRouter) HandlerFunc(method, path string, handler http.HandlerFunc) {
-	r.Router.HandlerFunc(method, joinURL(r, path), logger.LogHandlerFunc(handler))
+func (r *nrRouter) HandlerFunc(method, path string, h http.HandlerFunc) {
+	r.Router.HandlerFunc(method, joinURL(r, path), logHandler(h, handlerFunc).(http.HandlerFunc))
 }
 
 // ServeHTTP replaces httprouter.Router.ServeHTTP.
