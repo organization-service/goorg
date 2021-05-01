@@ -4,10 +4,10 @@
 package register
 
 import (
-	"github.com/organization-service/goorg/di"
-	"github.com/organization-service/goorg/internal/examples/application/server"
-	"github.com/organization-service/goorg/internal/examples/infra"
-	"github.com/organization-service/goorg/internal/examples/usecase"
+	"github.com/organization-service/goorg/v2/di"
+	"github.com/organization-service/goorg/v2/internal/examples/application/server"
+	"github.com/organization-service/goorg/v2/internal/examples/infra"
+	"github.com/organization-service/goorg/v2/internal/examples/usecase"
 )
 
 func New() *di.Container {

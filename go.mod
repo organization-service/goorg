@@ -1,4 +1,4 @@
-module github.com/organization-service/goorg
+module github.com/organization-service/goorg/v2
 
 go 1.15
 
@@ -10,8 +10,8 @@ require (
 	github.com/newrelic/go-agent/v3 v3.10.0
 	github.com/newrelic/go-agent/v3/integrations/nrhttprouter v1.0.0
 	github.com/rakyll/statik v0.1.7
+	github.com/savaki/swag v0.0.0-20170722173931-3a75479e44a3
 	github.com/stretchr/testify v1.5.1
-	github.com/urfave/cli v1.22.5
 	github.com/urfave/cli/v2 v2.3.0
 	go.elastic.co/apm v1.10.0
 	go.elastic.co/apm/module/apmgormv2 v1.10.0

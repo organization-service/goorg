@@ -8,7 +8,7 @@ import (
 	"runtime/debug"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/organization-service/goorg/internal"
+	"github.com/organization-service/goorg/v2/internal"
 )
 
 func New(fn ...func() interface{}) IRouter {

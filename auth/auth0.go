@@ -4,9 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"os"
 
+	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/form3tech-oss/jwt-go"
+	"github.com/organization-service/goorg/v2/internal"
+	"github.com/organization-service/goorg/v2/logger"
 )
 
 var getPemFn func(t *jwt.Token) (string, error)
@@ -40,4 +44,22 @@ func auth0Validation(c context.Context, t *jwt.Token, fn ...ValidaterFunc) (inte
 	}
 	result, _ := jwt.ParseRSAPublicKeyFromPEM([]byte(cert))
 	return result, nil
+}
+
+func Auth0Validation(h interface{}) http.HandlerFunc {
+	return func(rw http.ResponseWriter, r *http.Request) {
+		authValid := jwtmiddleware.New(jwtmiddleware.Options{
+			ValidationKeyGetter: func(t *jwt.Token) (interface{}, error) {
+				c := context.Background()
+				return auth0Validation(c, t)
+			},
+			SigningMethod: jwt.SigningMethodRS256,
+			ErrorHandler:  internal.OnError,
+		})
+		if err := authValid.CheckJWT(rw, r); err != nil {
+			logger.Log.Error(err)
+		} else {
+			internal.CallHandler(h, rw, r)
+		}
+	}
 }

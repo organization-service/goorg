@@ -9,8 +9,8 @@ import (
 
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/julienschmidt/httprouter"
-	"github.com/organization-service/goorg/auth"
-	"github.com/organization-service/goorg/router"
+	"github.com/organization-service/goorg/v2/auth"
+	"github.com/organization-service/goorg/v2/router"
 )
 
 func TestAuth0(t *testing.T) {

@@ -4,10 +4,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/organization-service/goorg"
-	diGene "github.com/organization-service/goorg/cmd/goorg-cli/di-generator"
-	repoGene "github.com/organization-service/goorg/cmd/goorg-cli/repository-generator"
-	swaggerGene "github.com/organization-service/goorg/cmd/goorg-cli/swagger-generator"
+	"github.com/organization-service/goorg/v2"
+	diGene "github.com/organization-service/goorg/v2/cmd/goorg-cli/di-generator"
+	repoGene "github.com/organization-service/goorg/v2/cmd/goorg-cli/repository-generator"
+	swaggerGene "github.com/organization-service/goorg/v2/cmd/goorg-cli/swagger-generator"
 	"github.com/urfave/cli/v2"
 )
 

@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/organization-service/goorg/router"
+	"github.com/organization-service/goorg/v2/router"
 	"github.com/stretchr/testify/assert"
 )
 

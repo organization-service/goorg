@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/organization-service/goorg/router"
+	"github.com/organization-service/goorg/v2/router"
 )
 
 var (
