@@ -3,7 +3,7 @@ package apmerrors
 import (
 	"context"
 
-	"github.com/organization-service/goorg/internal"
+	"github.com/organization-service/goorg/v2/internal"
 )
 
 func SendError(c context.Context, err error) {

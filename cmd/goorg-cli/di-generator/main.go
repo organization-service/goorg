@@ -311,7 +311,7 @@ package {{.PackageName}}
 
 import (
 
-	"github.com/organization-service/goorg/database"
+	"github.com/organization-service/goorg/v2/database"
 )
 
 var container *di.Container

@@ -5,7 +5,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/organization-service/goorg/internal"
+	"github.com/organization-service/goorg/v2/internal"
 )
 
 type (

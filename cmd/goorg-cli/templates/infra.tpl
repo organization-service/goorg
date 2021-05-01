@@ -6,7 +6,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/organization-service/goorg/database"
+	"github.com/organization-service/goorg/v2/database"
 	"gorm.io/gorm"
 )
 

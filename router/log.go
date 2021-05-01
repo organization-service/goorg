@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/organization-service/goorg/logger"
+	"github.com/organization-service/goorg/v2/logger"
 )
 
 type handlerType int

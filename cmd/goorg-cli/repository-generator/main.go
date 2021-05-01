@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"time"
 
-	_ "github.com/organization-service/goorg/cmd/goorg-cli/statik"
+	_ "github.com/organization-service/goorg/v2/cmd/goorg-cli/statik"
 	"github.com/rakyll/statik/fs"
 	"golang.org/x/tools/imports"
 )

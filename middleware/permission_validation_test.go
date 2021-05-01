@@ -12,10 +12,10 @@ import (
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/form3tech-oss/jwt-go"
-	"github.com/organization-service/goorg/auth"
-	"github.com/organization-service/goorg/logger"
-	"github.com/organization-service/goorg/middleware"
-	"github.com/organization-service/goorg/router"
+	"github.com/organization-service/goorg/v2/auth"
+	"github.com/organization-service/goorg/v2/logger"
+	"github.com/organization-service/goorg/v2/middleware"
+	"github.com/organization-service/goorg/v2/router"
 	"github.com/stretchr/testify/assert"
 )
 

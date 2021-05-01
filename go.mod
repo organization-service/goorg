@@ -1,4 +1,4 @@
-module github.com/organization-service/goorg
+module github.com/organization-service/goorg/v2
 
 go 1.15
 

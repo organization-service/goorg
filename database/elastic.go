@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/organization-service/goorg/internal"
+	"github.com/organization-service/goorg/v2/internal"
 	apmmysql "go.elastic.co/apm/module/apmgormv2/driver/mysql"
 	apmpostgres "go.elastic.co/apm/module/apmgormv2/driver/postgres"
 	apmsqlite "go.elastic.co/apm/module/apmgormv2/driver/sqlite"

@@ -9,7 +9,7 @@ import (
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/form3tech-oss/jwt-go"
-	"github.com/organization-service/goorg/internal"
+	"github.com/organization-service/goorg/v2/internal"
 )
 
 var AuthValid *jwtmiddleware.JWTMiddleware

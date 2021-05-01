@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/form3tech-oss/jwt-go"
-	"github.com/organization-service/goorg/auth"
-	"github.com/organization-service/goorg/internal"
+	"github.com/organization-service/goorg/v2/auth"
+	"github.com/organization-service/goorg/v2/internal"
 )
 
 type permissionMap map[string]bool

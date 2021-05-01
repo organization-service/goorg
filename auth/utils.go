@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/form3tech-oss/jwt-go"
-	"github.com/organization-service/goorg/cache"
-	"github.com/organization-service/goorg/httpclient"
+	"github.com/organization-service/goorg/v2/cache"
+	"github.com/organization-service/goorg/v2/httpclient"
 	"golang.org/x/net/http2"
 )
 
