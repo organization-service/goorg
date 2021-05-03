@@ -31,6 +31,7 @@ type (
 )
 
 var cachePem = cache.New()
+var userProperty = "auth0-user"
 
 func newClient() *http.Client {
 	tr := &http.Transport{
@@ -81,5 +82,5 @@ func getPem(ctx context.Context, t *jwt.Token, url string) (string, error) {
 }
 
 func FromContext(c context.Context) *jwt.Token {
-	return c.Value(AuthValid.Options.UserProperty).(*jwt.Token)
+	return c.Value(userProperty).(*jwt.Token)
 }
