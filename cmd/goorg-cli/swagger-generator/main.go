@@ -6,14 +6,12 @@ import (
 	"bytes"
 	"go/format"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"time"
 
-	_ "github.com/organization-service/goorg/v2/cmd/goorg-cli/statik"
-	"github.com/rakyll/statik/fs"
+	"github.com/organization-service/goorg/v2/cmd/goorg-cli/templates"
 	"golang.org/x/tools/imports"
 )
 
@@ -41,16 +39,10 @@ func importModule(buf []byte) ([]byte, error) {
 }
 
 func execute(tmplateStruct interface{}, fileName string) ([]byte, error) {
-	fileSystem, err := fs.New()
+	tmpBuf, err := templates.GetFile(fileName)
 	if err != nil {
 		return nil, err
 	}
-	f, err := fileSystem.Open(fileName)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	tmpBuf, _ := ioutil.ReadAll(f)
 	buf := new(bytes.Buffer)
 	tmpl := template.Must(template.New("").Parse(string(tmpBuf)))
 	if err := tmpl.Execute(buf, tmplateStruct); err != nil {
@@ -92,14 +84,14 @@ func fileCreate(buf []byte, outputDir, outputFileName string) error {
 func build() error {
 	log.Println("Generate swagger file")
 	tmpModel := newTemplateModel()
-	buf, err := tmpToBuffer("/swagger.tpl", tmpModel)
+	buf, err := tmpToBuffer("swagger.tpl", tmpModel)
 	if err != nil {
 		return err
 	}
 	if err := fileCreate(buf, "application/server", "swagger.go"); err != nil {
 		return err
 	}
-	buf, err = tmpToBuffer("/swagger_handler.tpl", tmpModel)
+	buf, err = tmpToBuffer("swagger_handler.tpl", tmpModel)
 	if err != nil {
 		return err
 	}

@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -11,7 +10,6 @@ import (
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/organization-service/goorg/v2/cache"
 	"github.com/organization-service/goorg/v2/httpclient"
-	"golang.org/x/net/http2"
 )
 
 type (
@@ -31,19 +29,7 @@ type (
 )
 
 var cachePem = cache.New()
-var userProperty = "auth0-user"
-
-func newClient() *http.Client {
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: true,
-		},
-	}
-	http2.ConfigureTransport(tr)
-	return &http.Client{
-		Transport: tr,
-	}
-}
+var userProperty = "auth-user"
 
 func getPem(ctx context.Context, t *jwt.Token, url string) (string, error) {
 	kid := t.Header["kid"].(string)

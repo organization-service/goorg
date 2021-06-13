@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   go-template:
-    build: ./build-docker
+    build: .devcontainer
     tty: true
     volumes:
       - ./:/src/:delegated

@@ -1,6 +1,6 @@
 module github.com/organization-service/goorg/v2
 
-go 1.15
+go 1.16
 
 require (
 	github.com/auth0/go-jwt-middleware v1.0.0

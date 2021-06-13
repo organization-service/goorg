@@ -15,6 +15,7 @@ func diCommand() *cli.Command {
 	const (
 		inputDir  = "input"
 		outputDir = "output"
+		driver    = "driver"
 	)
 	return &cli.Command{
 		Name:  "di",
@@ -25,7 +26,7 @@ func diCommand() *cli.Command {
 				Aliases: []string{"gene"},
 				Usage:   "Generate di register",
 				Action: func(c *cli.Context) error {
-					return diGene.Action(c.String(inputDir), c.String(outputDir))
+					return diGene.Action(c.String(inputDir), c.String(outputDir), c.Bool(driver))
 				},
 				Flags: []cli.Flag{
 					&cli.StringFlag{
@@ -39,6 +40,12 @@ func diCommand() *cli.Command {
 						Aliases: []string{"o"},
 						Value:   "./registry",
 						Usage:   "生成されるディレクトリ",
+					},
+					&cli.BoolFlag{
+						Name:    driver,
+						Aliases: []string{"d"},
+						Value:   false,
+						Usage:   "database driverを含めるかどうか",
 					},
 				},
 			},

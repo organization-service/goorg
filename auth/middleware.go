@@ -28,8 +28,7 @@ func AuthMiddleware(h interface{}) http.HandlerFunc {
 						return nil, fmt.Errorf("No support IDP_NAME: %s", IDP_NAME)
 					}
 				},
-				SigningMethod: jwt.SigningMethodRS256,
-				ErrorHandler:  internal.OnError,
+				ErrorHandler: internal.OnError,
 			})
 		}
 		if err := AuthValid.CheckJWT(rw, r); err != nil {
