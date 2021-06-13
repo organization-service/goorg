@@ -55,6 +55,7 @@ func Auth0Validation(h interface{}) http.HandlerFunc {
 			},
 			SigningMethod: jwt.SigningMethodRS256,
 			ErrorHandler:  internal.OnError,
+			UserProperty:  userProperty,
 		})
 		if err := authValid.CheckJWT(rw, r); err != nil {
 			logger.Log.Error(err)

@@ -1,7 +1,9 @@
 package middleware
 
 import (
+	"errors"
 	"net/http"
+	"strings"
 
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/organization-service/goorg/v2/auth"
@@ -35,9 +37,12 @@ func newPermissionMap(permissions ...string) permissionMap {
 	return mpPermission
 }
 
-func PermissionCheck(h interface{}, permissionClaim string, permissions ...string) http.HandlerFunc {
-	if permissionClaim == "" {
-		return func(w http.ResponseWriter, r *http.Request) { internal.CallHandler(h, w, r) }
+func PermissionCheck(h interface{}, permissionsClaim string, permissions ...string) http.HandlerFunc {
+	if permissionsClaim == "" {
+		panic(errors.New("Permissions claims is empty."))
+	}
+	if len(permissions) == 0 {
+		panic(errors.New("Permissions is zero."))
 	}
 	originalPermission := newPermissionMap(permissions...)
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -45,14 +50,15 @@ func PermissionCheck(h interface{}, permissionClaim string, permissions ...strin
 		ctx := r.Context()
 		token := auth.FromContext(ctx)
 		if claims, ok := token.Claims.(jwt.MapClaims); ok {
-			if claim, ok := claims[permissionClaim]; ok {
+			if claim, ok := claims[permissionsClaim]; ok {
 				var ps []string
 				switch values := claim.(type) {
+				case string:
+					// "read:test create:test"
+					ps = strings.Split(values, " ")
 				case []string:
-					ps = make([]string, len(values))
-					for idx, val := range values {
-						ps[idx] = val
-					}
+					// ["read:test", "create:test"]
+					ps = values
 				case []interface{}:
 					ps = make([]string, 0)
 					for _, value := range values {

@@ -4,18 +4,14 @@ import (
 	"bytes"
 	"go/format"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"time"
 
-	_ "github.com/organization-service/goorg/v2/cmd/goorg-cli/statik"
-	"github.com/rakyll/statik/fs"
+	"github.com/organization-service/goorg/v2/cmd/goorg-cli/templates"
 	"golang.org/x/tools/imports"
 )
-
-// template file generate command: statik -src=templates -f
 
 type (
 	templateModel struct {
@@ -41,16 +37,10 @@ func importModule(buf []byte) ([]byte, error) {
 }
 
 func execute(tmplateStruct interface{}, fileName string) ([]byte, error) {
-	fileSystem, err := fs.New()
+	tmpBuf, err := templates.GetFile(fileName)
 	if err != nil {
 		return nil, err
 	}
-	f, err := fileSystem.Open(fileName)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	tmpBuf, _ := ioutil.ReadAll(f)
 	buf := new(bytes.Buffer)
 	tmpl := template.Must(template.New("").Parse(string(tmpBuf)))
 	if err := tmpl.Execute(buf, tmplateStruct); err != nil {
@@ -92,11 +82,11 @@ func fileCreate(buf []byte, outputDir, outputFileName string) error {
 func build() error {
 	log.Println("Generate base repository")
 	tmpModel := newTemplateModel()
-	repositoryBuffer, err := tmpToBuffer("/repository.tpl", tmpModel)
+	repositoryBuffer, err := tmpToBuffer("repository.tpl", tmpModel)
 	if err != nil {
 		return err
 	}
-	infraRepository, err := tmpToBuffer("/infra.tpl", tmpModel)
+	infraRepository, err := tmpToBuffer("infra.tpl", tmpModel)
 	if err != nil {
 		return err
 	}
